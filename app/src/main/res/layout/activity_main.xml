@@ -4,20 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.john.ghid_turistic_cluj.Activities.MainActivity">
+    tools:context="com.example.john.ghidturistic.Activities.MainActivity">
 
     <RelativeLayout
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal"
+
         android:padding="@dimen/gap_horizontal">
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:text="@string/app_name"
+            android:textSize="22sp" />
 
         <SearchView
             android:id="@+id/search_bar"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_alignParentLeft="true"
+            android:visibility="gone">
 
         </SearchView>
 
@@ -25,6 +35,7 @@
             android:id="@+id/account_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
             android:src="@drawable/ic_account_circle_black_24dp" />
     </RelativeLayout>
 
@@ -40,7 +51,7 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title_bar">
+        android:layout_below="@+id/tab_layout">
 
     </android.support.v4.view.ViewPager>
 

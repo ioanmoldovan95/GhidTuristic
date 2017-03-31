@@ -5,4 +5,10 @@ package com.example.john.ghidturistic.Models;
  */
 
 public class User {
+
+    private String name;
+    private int type;
+    private String email;
+
+
 }
