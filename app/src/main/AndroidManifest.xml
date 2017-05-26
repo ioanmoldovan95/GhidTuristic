@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.john.ghid_turistic_cluj">
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -17,11 +18,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.john.ghidturistic.Activities.LoginActivity"></activity>
+        <activity android:name="com.example.john.ghidturistic.Activities.LoginActivity" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAoORdblrrOSx2J6Wv1s1BXbc9Xd1jnVOg"
-            />
+            android:value="AIzaSyAoORdblrrOSx2J6Wv1s1BXbc9Xd1jnVOg" />
+
+        <activity android:name="com.example.john.ghidturistic.Activities.ProfileActivity" />
+        <activity android:name="com.example.john.ghidturistic.Activities.AddObjectiveActivity" />
+        <activity android:name="com.example.john.ghidturistic.Fragments.PositionActivity"></activity>
     </application>
 
 </manifest>

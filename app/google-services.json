@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "376852619566",
+    "firebase_url": "https://ghidturistic-83b41.firebaseio.com",
+    "project_id": "ghidturistic-83b41",
+    "storage_bucket": "ghidturistic-83b41.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:376852619566:android:65c07e9e1dca06dd",
+        "android_client_info": {
+          "package_name": "com.example.john.ghidturistic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "376852619566-n99otlepe02tj82qkjl9ceddji7t4j16.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.john.ghidturistic",
+            "certificate_hash": "8d011d3e1a9a12273116fc8f2fcd88679d6ac11f"
+          }
+        },
+        {
+          "client_id": "376852619566-7mj9mvfael0os9buooep0sr7dlsujtsm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIkPdWJx2Uh7UNDcuOHTvKAT3DC-8hE6E"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "376852619566-7mj9mvfael0os9buooep0sr7dlsujtsm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
