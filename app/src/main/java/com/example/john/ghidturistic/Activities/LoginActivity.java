@@ -1,6 +1,5 @@
 package com.example.john.ghidturistic.Activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -13,7 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.john.ghid_turistic_cluj.R;
+import com.example.john.ghidturistic.Helpers.Constants;
 import com.example.john.ghidturistic.Helpers.FirebaseService;
+import com.squareup.otto.Subscribe;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -22,14 +23,12 @@ public class LoginActivity extends AppCompatActivity {
     Button loginButton;
     FirebaseService firebaseService;
     ImageButton backButton;
-    private static Activity context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         firebaseService=FirebaseService.getInstance();
-        context=this;
         emailText=(EditText)findViewById(R.id.email_edit_text);
         pass1Text=(EditText)findViewById(R.id.password_edit_text);
         pass2Text=(EditText)findViewById(R.id.password_repeat_edit_text);
@@ -89,7 +88,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-
     private boolean checkEmpty(String string, int resID){
         if(TextUtils.isEmpty(string)){
             Toast.makeText(this, resID, Toast.LENGTH_SHORT).show();
@@ -116,8 +114,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public static Activity getActivity(){
-        return context;
+    @Subscribe
+    public void closeActivity(int code){
+        if(code== Constants.BusCodes.CLOSE_LOGIN_ACTIVITY_CODE){
+            this.finish();
+        }
     }
 
 }

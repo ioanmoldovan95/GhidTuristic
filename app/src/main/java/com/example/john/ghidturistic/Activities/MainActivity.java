@@ -16,6 +16,7 @@ import com.example.john.ghidturistic.Helpers.Constants;
 import com.example.john.ghidturistic.Helpers.FirebaseService;
 import com.example.john.ghidturistic.Models.Objective;
 import com.example.john.ghidturistic.Models.User;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
@@ -31,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     FirebaseService firebaseService;
     ViewPagerAdapter viewPagerAdapter;
     SearchView searchView;
-    boolean isQueryFinished=false;
 
 
     @Override
@@ -39,8 +39,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         firebaseService = FirebaseService.getInstance();
-        firebaseService.firebaseInit(this);
-        firebaseService.getObjectives();
+        objectives=firebaseService.getObjectives();
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.map_text));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.list_text));
@@ -109,37 +108,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public static void setUserLoggedIn(boolean loggedIn) {
-        userLoggedIn = loggedIn;
+    @Subscribe
+    public static void setUserStatus(int code) {
+        if(code==Constants.BusCodes.LOGIN_USER_CODE){
+            userLoggedIn=true;
+        }else{
+            userLoggedIn=false;
+        }
     }
 
+    @Subscribe
     public static void setAppUser(User user) {
         appUser = user;
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        firebaseService.addAuthStateListener();
-    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        firebaseService.removeAuthStateListener();
-    }
-
-    public static ArrayList<Objective> getObjectives() {
-        return objectives;
-    }
-
-    public void updateObjectives(ArrayList<Objective> objectives) {
-
-        MainActivity.objectives = objectives;
-        setQueryFinished(true);
-        viewPagerAdapter.setObjectives(objectives,viewPager.getCurrentItem());
-
-    }
 
     private void performSearch(String text){
         ArrayList<Objective> newObjectives=new ArrayList<>();
@@ -152,11 +135,5 @@ public class MainActivity extends AppCompatActivity {
         }
         viewPagerAdapter.setObjectives(newObjectives,viewPager.getCurrentItem());
     }
-
-    public void setQueryFinished(boolean isQueryFinished){
-        this.isQueryFinished=isQueryFinished;
-    }
-
-
 
 }

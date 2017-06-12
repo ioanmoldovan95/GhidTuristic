@@ -39,4 +39,13 @@ public class Constants {
         public static int POSITION_CODE_MAP = 1;
         public static int POSITION_CODE_INPUT = 1;
     }
+
+    public static class BusCodes {
+        public static int LOGIN_USER_CODE = 1;
+        public static int LOGOUT_USER_CODE = 2;
+        public static int CLOSE_LOGIN_ACTIVITY_CODE = 3;
+        public static int LOGIN_FAILED = 4;
+        public static int OBJECTIVES_UPDATED = 5;
+
+    }
 }

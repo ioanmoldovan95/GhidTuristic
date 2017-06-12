@@ -50,7 +50,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map=googleMap;
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
 
+            }
+        });
         int permissionCheck= ContextCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
         if(permissionCheck != PackageManager.PERMISSION_GRANTED){
             if(this.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)){
@@ -86,6 +91,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void updateUI(){
+        //TODO find a more efficient way to update UI
         map.clear();
         if (objectives != null) {
             for (Objective objective:objectives) {

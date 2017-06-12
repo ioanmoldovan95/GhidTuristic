@@ -1,14 +1,7 @@
 package com.example.john.ghidturistic.Helpers;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.view.View;
-import android.widget.Toast;
 
-import com.example.john.ghid_turistic_cluj.R;
-import com.example.john.ghidturistic.Activities.LoginActivity;
-import com.example.john.ghidturistic.Activities.MainActivity;
 import com.example.john.ghidturistic.Models.Objective;
 import com.example.john.ghidturistic.Models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,6 +14,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.otto.Bus;
+import com.squareup.otto.ThreadEnforcer;
 
 import java.util.ArrayList;
 
@@ -33,8 +28,7 @@ public class FirebaseService {
     private static FirebaseDatabase mDatabase;
     private static FirebaseService firebaseService = new FirebaseService();
     private static ArrayList<Objective> objectives;
-    private DataSnapshot savedDataSnapshot;
-    MainActivity mainActivity;
+    public static Bus bus = new Bus(ThreadEnforcer.ANY);
 
     public static FirebaseService getInstance() {
         return firebaseService;
@@ -44,26 +38,30 @@ public class FirebaseService {
         return user;
     }
 
-    public void firebaseInit(Context context) {
+    public void firebaseInit() {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
-        mainActivity = (MainActivity) context;
-        getObjectives();
-        if(mAuth.getCurrentUser()!=null){
-            MainActivity.setUserLoggedIn(true);
+
+        getObjectivesFromFirebase();
+        if (mAuth.getCurrentUser() != null) {
+            //TODO set user logged in -done
+            bus.post(Constants.BusCodes.LOGIN_USER_CODE);
         }
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    MainActivity.setUserLoggedIn(true);
+                    //TODO set user logged in -done
+                    bus.post(Constants.BusCodes.LOGIN_USER_CODE);
                     DatabaseReference userRef = mDatabase.getReference(Constants.FirebaseDBKeys.USERS_DB).child(user.getUid());
                     userRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             User loggedUser = dataSnapshot.getValue(User.class);
-                            MainActivity.setAppUser(loggedUser);
+                            //TODO set app user
+                            bus.post(loggedUser);
+                            bus.post(loggedUser);
                         }
 
                         @Override
@@ -72,9 +70,8 @@ public class FirebaseService {
                         }
                     });
 
-                    if (LoginActivity.getActivity() != null) {
-                        LoginActivity.getActivity().finish();
-                    }
+                    //TODO close login activity -done
+                    bus.post(Constants.BusCodes.CLOSE_LOGIN_ACTIVITY_CODE);
                 }
             }
         };
@@ -95,14 +92,14 @@ public class FirebaseService {
                 user = mAuth.getCurrentUser();
                 if (user != null) {
                     addUserToDB(email);
-                    MainActivity.setUserLoggedIn(true);
-                    Intent intent = new Intent(LoginActivity.getActivity(), MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    LoginActivity.getActivity().startActivity(intent);
+                    //TODO set user logged in -done
+                    bus.post(Constants.BusCodes.LOGIN_USER_CODE);
+
                 } else {
-                    MainActivity.setUserLoggedIn(false);
-                    MainActivity.setAppUser(null);
-                    Toast.makeText(LoginActivity.getActivity(), LoginActivity.getActivity().getString(R.string.login_failed_string), Toast.LENGTH_SHORT).show();
+                    // TODO set user logged out
+                    bus.post(Constants.BusCodes.LOGOUT_USER_CODE);
+                    // TODO show login failed toast
+                    bus.post(Constants.BusCodes.LOGIN_FAILED);
                 }
             }
         });
@@ -114,14 +111,11 @@ public class FirebaseService {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 user = mAuth.getCurrentUser();
                 if (user != null) {
-                    MainActivity.setUserLoggedIn(true);
-                    Intent intent = new Intent(LoginActivity.getActivity(), MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    LoginActivity.getActivity().startActivity(intent);
+                    //TODO set user logged in
+                    bus.post(Constants.BusCodes.LOGIN_USER_CODE);
                 } else {
-                    MainActivity.setUserLoggedIn(false);
-                    MainActivity.setAppUser(null);
-                    Toast.makeText(LoginActivity.getActivity(), LoginActivity.getActivity().getString(R.string.login_failed_string), Toast.LENGTH_SHORT).show();
+                    //TODO set user logged out
+                    bus.post(Constants.BusCodes.LOGOUT_USER_CODE);
                 }
             }
         });
@@ -129,9 +123,9 @@ public class FirebaseService {
 
     public void logoutUser() {
         mAuth.signOut();
-        MainActivity.setAppUser(null);
-        MainActivity.setUserLoggedIn(false);
-        mainActivity.fab.setVisibility(View.GONE);
+        //TODO set user logged out
+        bus.post(Constants.BusCodes.LOGOUT_USER_CODE);
+
 
     }
 
@@ -139,12 +133,12 @@ public class FirebaseService {
         String userID = user.getUid();
         DatabaseReference userRef = mDatabase.getReference(Constants.FirebaseDBKeys.USERS_DB).child(userID);
         User newUser = new User(email);
-        MainActivity.setUserLoggedIn(true);
-        MainActivity.setAppUser(newUser);
+        //TODO set user logged in
+        bus.post(Constants.BusCodes.LOGIN_USER_CODE);
         userRef.setValue(newUser);
     }
 
-    public void getObjectives() {
+    public void getObjectivesFromFirebase() {
         objectives = new ArrayList<>();
         DatabaseReference objRef = mDatabase.getReference(Constants.FirebaseDBKeys.OBJECTIVES_DB);
 
@@ -155,10 +149,12 @@ public class FirebaseService {
                     {
                         objectives.add(postSnapshot.getValue(Objective.class));
                     }
-                    mainActivity.updateObjectives(objectives);
+                    //TODO update objectives
+                    bus.post(Constants.BusCodes.OBJECTIVES_UPDATED);
 
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -170,6 +166,15 @@ public class FirebaseService {
         DatabaseReference objRef = mDatabase.getReference(Constants.FirebaseDBKeys.OBJECTIVES_DB);
         String objId = objRef.push().getKey();
         objRef.child(objId).setValue(objective);
-        this.getObjectives();
+        //TODO update UI on new objective added
+        this.getObjectivesFromFirebase();
+    }
+
+    public ArrayList<Objective> getObjectives(){
+        return objectives;
+    }
+
+    public Bus getBus(){
+        return bus;
     }
 }

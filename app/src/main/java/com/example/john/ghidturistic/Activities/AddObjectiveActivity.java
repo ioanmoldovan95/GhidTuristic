@@ -12,11 +12,10 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.john.ghid_turistic_cluj.R;
-import com.example.john.ghidturistic.Fragments.PositionActivity;
-import com.example.john.ghidturistic.Helpers.Constants;
 import com.example.john.ghidturistic.Helpers.FirebaseService;
 import com.example.john.ghidturistic.Models.Objective;
 import com.example.john.ghidturistic.Models.Position;
+import com.squareup.otto.Subscribe;
 
 public class AddObjectiveActivity extends AppCompatActivity {
 
@@ -24,12 +23,14 @@ public class AddObjectiveActivity extends AppCompatActivity {
     Button positionButton, addButton;
     ImageButton backButton;
     Position position;
+    FirebaseService firebaseService;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_objective);
+        firebaseService=FirebaseService.getInstance();
         backButton = (ImageButton) findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,10 +57,10 @@ public class AddObjectiveActivity extends AppCompatActivity {
                 name = nameEditText.getText().toString();
                 description = descriptionEditText.getText().toString();
                 Objective objective = new Objective(name, description, position);
-                if (MainActivity.getObjectives().contains(objective)) {
+                if (firebaseService.getObjectives().contains(objective)) {
                     Toast.makeText(getApplicationContext(), getString(R.string.objective_exists), Toast.LENGTH_SHORT).show();
                 } else {
-                    FirebaseService.getInstance().addNewObjective(objective);
+                    firebaseService.addNewObjective(objective);
                     Intent intent = new Intent(AddObjectiveActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
@@ -67,11 +68,6 @@ public class AddObjectiveActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void getPositionFromMap() {
-        Intent intent = new Intent(AddObjectiveActivity.this, PositionActivity.class);
-        startActivityForResult(intent, Constants.RequestCodes.POSITION_CODE_MAP);
     }
 
     private void getPositionFromDialog() {
@@ -99,6 +95,7 @@ public class AddObjectiveActivity extends AppCompatActivity {
                     double lat = Double.parseDouble(latEditText.getText().toString());
                     double lng = Double.parseDouble(lngEditText.getText().toString());
                     position = new Position(lat, lng);
+                    firebaseService.getBus().post(position);
                     dialog.dismiss();
                 } catch (NumberFormatException ex) {
                     Toast.makeText(AddObjectiveActivity.this, "Data is not valid", Toast.LENGTH_SHORT).show();
@@ -111,17 +108,11 @@ public class AddObjectiveActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == Constants.RequestCodes.POSITION_CODE_MAP) {
-                double lat, lng;
-                lat = data.getDoubleExtra(Constants.Keys.LAT, 0.0f);
-                lng = data.getDoubleExtra(Constants.Keys.LONG, 0.0f);
-                position = new Position(lat, lng);
-            }
-        }
+    @Subscribe
+    public void getPosition(Position position){
+        //TODO set objective position in appropriate edittext, as default
+
     }
+
 }
 

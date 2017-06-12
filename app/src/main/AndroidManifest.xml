@@ -11,12 +11,15 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.john.ghidturistic.Activities.MainActivity">
+        <activity android:name="com.example.john.ghidturistic.Activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name="com.example.john.ghidturistic.Activities.MainActivity">
+
         </activity>
         <activity android:name="com.example.john.ghidturistic.Activities.LoginActivity" />
 
@@ -26,7 +29,7 @@
 
         <activity android:name="com.example.john.ghidturistic.Activities.ProfileActivity" />
         <activity android:name="com.example.john.ghidturistic.Activities.AddObjectiveActivity" />
-        <activity android:name="com.example.john.ghidturistic.Fragments.PositionActivity"></activity>
+
     </application>
 
 </manifest>

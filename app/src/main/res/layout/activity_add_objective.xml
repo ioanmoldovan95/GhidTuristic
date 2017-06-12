@@ -6,11 +6,13 @@
     android:layout_height="match_parent"
     tools:context="com.example.john.ghidturistic.Activities.AddObjectiveActivity">
 
+    <!-- TODO replace hardcoded values with resources-->
     <ImageButton
         android:id="@+id/back_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:clickable="true"
         android:src="@drawable/ic_arrow_back_black_24dp" />
@@ -38,15 +40,42 @@
             android:hint="Description"
             android:inputType="textCapSentences" />
 
-        <Button
-            android:id="@+id/input_position_button"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <EditText
+            android:id="@+id/lat_edit_text"
             android:layout_below="@id/description_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Latitude"
+            android:inputType="textCapWords" />
+
+        <EditText
+            android:id="@+id/lng_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lat_edit_text"
+            android:hint="Longitude"
+            android:inputType="textCapSentences" />
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/gap_vertical"
-            android:text="Position" />
+            android:layout_marginTop="20dp"
+            android:id="@+id/objective_image_view"
+            android:layout_below="@id/lng_edit_text"
+            android:visibility="gone"
+            />
+
+        <Button
+            android:id="@+id/add_photo_button"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:text="@string/add_photo_string"
+            android:layout_below="@id/lng_edit_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            />
 
 
         <Button
